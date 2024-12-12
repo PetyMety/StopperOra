@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stopperora.StopperController">
+    <center>
+        <VBox fx:id="centerBox" alignment="CENTER">
+            <Label fx:id="lapLabel" text="" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+        </VBox>
+    </center>
+    <left>
+        <VBox fx:id="buttonBox" alignment="CENTER" spacing="10">
+            <Button fx:id="startButton" text="Start" onAction="#handleStartButton"/>
+            <Button fx:id="resetButton" text="Reset" onAction="#handleResetButton"/>
+        </VBox>
+    </left>
+    <right>
+        <HBox fx:id="timeBox" alignment="CENTER" spacing="10">
+            <Label fx:id="timeLabel" text="00:00:000" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+        </HBox>
+    </right>
+</BorderPane>
