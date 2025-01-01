@@ -13,6 +13,7 @@ public class StopperApplication extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("stopper-view.fxml"));
         primaryStage.setTitle("Stopper");
         primaryStage.setScene(new Scene(root, 400, 200));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

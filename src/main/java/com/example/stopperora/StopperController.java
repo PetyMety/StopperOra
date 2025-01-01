@@ -14,71 +14,85 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class StopperController implements Initializable {
+public class StopperController {
 
+    @FXML
+    private Label reszTime;
+    @FXML
+    private Label actualTime;
     @FXML
     private Button startButton;
-
     @FXML
     private Button resetButton;
-
-    @FXML
-    private Label timeLabel;
-
-    @FXML
-    private Label lapLabel;
-
     private LocalDateTime startTime;
-    private LocalDateTime lapTime;
-    private Timeline timeline;
+    private LocalDateTime stopTime;
+    private Boolean isRunning = false;
+    private Timer timer;
+    private List<String> reszIdok = new ArrayList<>();
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        timeline = new Timeline(new KeyFrame(Duration.millis(1), e -> updateTime()));
-        timeline.setCycleCount(Animation.INDEFINITE);
-    }
 
     @FXML
-    private void handleStartButton(ActionEvent event) {
-        if (startButton.getText().equals("Start")) {
+    public void startStopper() {
+
+        if(startButton.getText().equalsIgnoreCase("Start")){
+            isRunning= true;
             startTime = LocalDateTime.now();
-            lapTime = startTime;
-            timeline.play();
             startButton.setText("Stop");
-            resetButton.setText("Lap");
-        } else {
-            timeline.stop();
+            resetButton.setText("Részidő");
+            timer= new Timer();
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    stopTime=LocalDateTime.now();
+                    Platform.runLater(() -> {
+                        actualTime.setText(String.valueOf(getElapsedTime()));
+                    });
+
+                }},0, 100);
+
+        }else{
             startButton.setText("Start");
             resetButton.setText("Reset");
+            stopTime = LocalDateTime.now();
+            isRunning= false;
+            if (timer != null) {
+                timer.cancel();
+                timer = null;
+            }
         }
+    }
+    public String getElapsedTime() {
+        LocalDateTime endTime = isRunning? LocalDateTime.now(): stopTime;
+        Duration duration = Duration.between(startTime, endTime);
+        return String.format("%02d:%02d.%03d", duration.toMinutes() % 60, duration.getSeconds() % 60, duration.toMillis() % 1000);
     }
 
     @FXML
-    private void handleResetButton(ActionEvent event) {
-        if (resetButton.getText().equals("Reset")) {
+    public void resetStopper() {
+        if (resetButton.getText().equalsIgnoreCase("Reset")) {
+            isRunning = false;
             startTime = null;
-            lapTime = null;
-            timeLabel.setText("00:00:000");
-            lapLabel.setText("");
-        } else {
-            lapTime = LocalDateTime.now();
-            lapLabel.setText(getTime(lapTime, startTime));
-        }
-    }
+            stopTime = null;
+            actualTime.setText("00:00.000");
+            reszTime.setText("");
+            reszIdok.clear();
+        } else if (resetButton.getText().equalsIgnoreCase("Részidő")) {
+            if (isRunning) {
+                reszIdok.add(actualTime.getText());
+                String timeString = "";
+                for (String s : reszIdok)
+                {
+                    timeString += s + "\n";
+                }
 
-    private void updateTime() {
-        if (startTime != null) {
-            LocalDateTime currentTime = LocalDateTime.now();
-            timeLabel.setText(getTime(currentTime, startTime));
+                reszTime.setText(timeString);
+            }
         }
-    }
-
-    private String getTime(LocalDateTime currentTime, LocalDateTime startTime) {
-        long seconds = java.time.Duration.between(startTime, currentTime).toSeconds();
-        long minutes = seconds / 60;
-        seconds = seconds % 60;
-        long milliseconds = java.time.Duration.between(startTime, currentTime).toMillis() % 1000;
-        return String.format("%02d:%02d:%03d", minutes, seconds, milliseconds);
     }
 }
