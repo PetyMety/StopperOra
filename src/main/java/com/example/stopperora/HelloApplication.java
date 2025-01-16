@@ -13,11 +13,10 @@ public class HelloApplication extends Application {
     public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
         primaryStage.setTitle("Stopper");
-        primaryStage.setScene(new Scene(root, 400, 200));
+        primaryStage.setScene(new Scene(root, 400, 400));
         primaryStage.setResizable(false);
         primaryStage.show();
     }
-
     public static void main(String[] args) {
         launch();
     }
