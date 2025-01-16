@@ -1,27 +1,18 @@
 package com.example.stopperora;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.util.Duration;
 
-import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ResourceBundle;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class StopperController {
+public class HelloController {
 
     @FXML
     private Label reszTime;
@@ -37,8 +28,10 @@ public class StopperController {
     private Timer timer;
     private List<String> reszIdok = new ArrayList<>();
 
+
     @FXML
     public void startStopper() {
+
         if(startButton.getText().equalsIgnoreCase("Start")){
             isRunning= true;
             startTime = LocalDateTime.now();
@@ -54,6 +47,7 @@ public class StopperController {
                     });
 
                 }},0, 100);
+
         }else{
             startButton.setText("Start");
             resetButton.setText("Reset");
@@ -70,6 +64,7 @@ public class StopperController {
         Duration duration = Duration.between(startTime, endTime);
         return String.format("%02d:%02d.%03d", duration.toMinutes() % 60, duration.getSeconds() % 60, duration.toMillis() % 1000);
     }
+
     @FXML
     public void resetStopper() {
         if (resetButton.getText().equalsIgnoreCase("Reset")) {
@@ -87,6 +82,7 @@ public class StopperController {
                 {
                     timeString += s + "\n";
                 }
+
                 reszTime.setText(timeString);
             }
         }
